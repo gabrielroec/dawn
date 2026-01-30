@@ -24,7 +24,24 @@
     }
   {%- endstyle -%}
 {%- endif -%}
+{%- style -%}
+  #Slider-{{ section.id }} .slideshow__media .slideshow__image-mobile {
+    display: none !important;
+  }
 
+  #Slider-{{ section.id }} .slideshow__media .slideshow__image-desktop {
+    display: block !important;
+  }
+
+  @media screen and (max-width: 749px) {
+    #Slider-{{ section.id }} .slideshow__media .slideshow__image-desktop {
+      display: none !important;
+    }
+    #Slider-{{ section.id }} .slideshow__media .slideshow__image-mobile {
+      display: block !important;
+    }
+  }
+{%- endstyle -%}
 <slideshow-component
   class="slider-mobile-gutter{% if section.settings.layout == 'grid' %} page-width{% endif %}{% if section.settings.show_text_below %} mobile-text-below{% endif %}"
   role="region"
@@ -123,7 +140,10 @@
         <div class="slideshow__media banner__media media{% if block.settings.image == blank %} placeholder{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}">
           {%- if block.settings.image -%}
             {%- liquid
+              assign image_desktop = block.settings.image
+              assign image_mobile = block.settings.image_mobile
               assign height = block.settings.image.width | divided_by: block.settings.image.aspect_ratio | round
+
               if section.settings.image_behavior == 'ambient'
                 assign sizes = '120vw'
                 assign widths = '450, 660, 900, 1320, 1800, 2136, 2400, 3600, 7680'
@@ -131,23 +151,64 @@
                 assign sizes = '100vw'
                 assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
               endif
+              assign sizes_mobile = '100vw'
+              assign widths_mobile = '375, 550, 750, 1100'
               assign fetch_priority = 'auto'
+
               if section.index == 1
                 assign fetch_priority = 'high'
               endif
             -%}
+
             {%- if forloop.first %}
               {{
-                block.settings.image
+                image_desktop
                 | image_url: width: 3840
-                | image_tag: height: height, sizes: sizes, widths: widths, fetchpriority: fetch_priority
+                | image_tag:
+                  class: 'slideshow__image-desktop',
+                  height: height,
+                  sizes: sizes,
+                  widths: widths,
+                  fetchpriority: fetch_priority
               }}
             {%- else -%}
               {{
-                block.settings.image
+                image_desktop
                 | image_url: width: 3840
-                | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths
+                | image_tag:
+                  class: 'slideshow__image-desktop',
+                  loading: 'lazy',
+                  height: height,
+                  sizes: sizes,
+                  widths: widths
               }}
+            {%- endif -%}
+            {%- if image_mobile != blank -%}
+              {%- assign height_mobile = image_mobile.width | divided_by: image_mobile.aspect_ratio | round -%}
+
+              {%- if forloop.first -%}
+                {{
+                  image_mobile
+                  | image_url: width: 1100
+                  | image_tag:
+                    class: 'slideshow__image-mobile',
+                    height: height_mobile,
+                    sizes: sizes_mobile,
+                    widths: widths_mobile,
+                    fetchpriority: fetch_priority
+                }}
+              {%- else -%}
+                {{
+                  image_mobile
+                  | image_url: width: 1100
+                  | image_tag:
+                    class: 'slideshow__image-mobile',
+                    loading: 'lazy',
+                    height: height_mobile,
+                    sizes: sizes_mobile,
+                    widths: widths_mobile
+                }}
+              {%- endif -%}
             {%- endif -%}
           {%- else -%}
             {%- assign placeholder_slide = forloop.index | modulo: 2 -%}
@@ -396,6 +457,11 @@
           "label": "t:sections.slideshow.blocks.slide.settings.image.label"
         },
         {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image"
+        },
+        {
           "type": "range",
           "id": "image_overlay_opacity",
           "min": 0,
@@ -452,12 +518,12 @@
         {
           "type": "header",
           "content": "t:sections.slideshow.blocks.slide.settings.header_button.content"
-        },        
+        },
         {
           "type": "text",
           "id": "button_label",
           "default": "t:sections.slideshow.blocks.slide.settings.button_label.default",
-          "label": "t:sections.slideshow.blocks.slide.settings.button_label.label", 
+          "label": "t:sections.slideshow.blocks.slide.settings.button_label.label",
           "info": "t:sections.slideshow.blocks.slide.settings.button_label.info"
         },
         {
@@ -474,7 +540,7 @@
         {
           "type": "header",
           "content": "t:sections.slideshow.blocks.slide.settings.header_layout.content"
-        },         
+        },
         {
           "type": "checkbox",
           "id": "show_text_box",
@@ -564,7 +630,7 @@
           ],
           "default": "center",
           "label": "t:sections.slideshow.blocks.slide.settings.text_alignment_mobile.label"
-        },        
+        },
         {
           "type": "color_scheme",
           "id": "color_scheme",
