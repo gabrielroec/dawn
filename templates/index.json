@@ -62,23 +62,8 @@
         "slide_LbQCVF": {
           "type": "slide",
           "settings": {
-            "image_overlay_opacity": 0,
-            "heading": "Slide de imagem",
-            "heading_size": "h1",
-            "subheading": "Conte a história de sua marca com vídeos e imagens",
-            "button_label": "Etiqueta de botão",
-            "link": "",
-            "button_style_secondary": false,
-            "show_text_box": true,
-            "box_align": "middle-center",
-            "text_alignment": "center",
-            "text_alignment_mobile": "center",
-            "color_scheme": ""
-          }
-        },
-        "slide_CGBjcN": {
-          "type": "slide",
-          "settings": {
+            "image": "shopify://shop_images/1307816-wire-frame-landscape-banner-with-mountainous-terreno-gratis-vetor.jpg",
+            "image_mobile": "shopify://shop_images/calm.jpg",
             "image_overlay_opacity": 0,
             "heading": "Slide de imagem",
             "heading_size": "h1",
@@ -95,8 +80,7 @@
         }
       },
       "block_order": [
-        "slide_LbQCVF",
-        "slide_CGBjcN"
+        "slide_LbQCVF"
       ],
       "name": "t:sections.slideshow.presets.name",
       "settings": {
@@ -143,6 +127,8 @@
       ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
+        "video": "shopify://files/videos/ForBiggerBlazes.mp4",
+        "use_video_instead_of_image": true,
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "image_first",
