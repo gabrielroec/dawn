@@ -22,8 +22,10 @@
 
 {%- liquid
   assign fetch_priority = 'auto'
+  assign loading_attr = 'lazy'
   if section.index == 1
     assign fetch_priority = 'high'
+    assign loading_attr = 'eager'
   endif
 
   assign has_video = false
@@ -75,7 +77,7 @@
               {{
                 section.settings.image
                 | image_url: width: 1500
-                | image_tag: sizes: sizes, widths: widths, fetchpriority: fetch_priority, loading: 'lazy'
+                | image_tag: sizes: sizes, widths: widths, fetchpriority: fetch_priority, loading: loading_attr
               }}
             {%- else -%}
               {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
